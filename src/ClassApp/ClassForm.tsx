@@ -1,63 +1,172 @@
-import { Component } from "react";
+import { FormEvent, ChangeEvent, Component } from "react";
+
+import ClassTextInput from "./ClassTextInput";
+import ClassPhoneInput from "./ClassPhoneInput";
 import { ErrorMessage } from "../ErrorMessage";
 
-const firstNameErrorMessage = "First name must be at least 2 characters long";
-const lastNameErrorMessage = "Last name must be at least 2 characters long";
-const emailErrorMessage = "Email is Invalid";
-const cityErrorMessage = "State is Invalid";
-const phoneNumberErrorMessage = "Invalid Phone Number";
+import {
+  isEmailValid,
+  isCityValid,
+  isNameValid,
+  isPhoneValid,
+} from "../utils/validations";
+import { UserInformation, PhoneArray } from "../types";
+import { formErrors } from "../utils/error";
 
-export class ClassForm extends Component {
+const { firstNameError, lastNameError, emailError, cityError, phoneError } =
+  formErrors;
+
+interface ClassFormProps {
+  appStateHandler: (newState: UserInformation) => void;
+}
+
+interface ClassFormState {
+  firstName: string;
+  lastName: string;
+  email: string;
+  city: string;
+  phone: PhoneArray;
+  formSubmitted: boolean;
+}
+
+export class ClassForm extends Component<ClassFormProps, ClassFormState> {
+  constructor(props: ClassFormProps) {
+    super(props);
+    this.state = {
+      firstName: "",
+      lastName: "",
+      email: "",
+      city: "",
+      phone: ["", "", "", ""],
+      formSubmitted: false,
+    };
+  }
+
+  reset = () => {
+    this.setState({
+      firstName: "",
+      lastName: "",
+      email: "",
+      city: "",
+      phone: ["", "", "", ""],
+      formSubmitted: false,
+    });
+  };
+
+  validator = () => {
+    const { firstName, lastName, email, city, phone } = this.state;
+    return {
+      firstName: isNameValid(firstName),
+      lastName: isNameValid(lastName),
+      email: isEmailValid(email),
+      city: isCityValid(city),
+      phone: isPhoneValid(phone),
+    };
+  };
+
+  handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    this.setState({ ...this.state, formSubmitted: true });
+
+    const { firstName, lastName, email, city, phone } = this.state;
+
+    const validator = this.validator();
+
+    const validated = Object.values(validator).every((valid) => valid);
+
+    if (validated) {
+      console.log(validated);
+      this.props.appStateHandler({
+        firstName,
+        lastName,
+        email,
+        city,
+        phone: phone,
+        formSubmitted: true,
+      });
+      this.reset();
+    } else {
+      alert("Bad Inputs");
+    }
+  };
+
+  handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    if (Object.keys(this.state).includes(name)) {
+      this.setState((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
+  };
+
+  setPhone = (phone: PhoneArray) => {
+    this.setState({
+      phone: phone,
+    });
+  };
+
   render() {
+    const { firstName, lastName, email, city, phone, formSubmitted } =
+      this.state;
+
+    const validator = this.validator();
+
     return (
-      <form>
+      <form onSubmit={this.handleSubmit}>
         <u>
           <h3>User Information Form</h3>
         </u>
-
-        {/* first name input */}
-        <div className="input-wrap">
-          <label>{"First Name"}:</label>
-          <input placeholder="Bilbo" />
-        </div>
-        <ErrorMessage message={firstNameErrorMessage} show={true} />
-
-        {/* last name input */}
-        <div className="input-wrap">
-          <label>{"Last Name"}:</label>
-          <input placeholder="Baggins" />
-        </div>
-        <ErrorMessage message={lastNameErrorMessage} show={true} />
-
-        {/* Email Input */}
-        <div className="input-wrap">
-          <label>{"Email"}:</label>
-          <input placeholder="bilbo-baggins@adventurehobbits.net" />
-        </div>
-        <ErrorMessage message={emailErrorMessage} show={true} />
-
-        {/* City Input */}
-        <div className="input-wrap">
-          <label>{"City"}:</label>
-          <input placeholder="Hobbiton" />
-        </div>
-        <ErrorMessage message={cityErrorMessage} show={true} />
-
-        <div className="input-wrap">
-          <label htmlFor="phone">Phone:</label>
-          <div id="phone-input-wrap">
-            <input type="text" id="phone-input-1" placeholder="55" />
-            -
-            <input type="text" id="phone-input-2" placeholder="55" />
-            -
-            <input type="text" id="phone-input-3" placeholder="55" />
-            -
-            <input type="text" id="phone-input-4" placeholder="5" />
-          </div>
-        </div>
-
-        <ErrorMessage message={phoneNumberErrorMessage} show={true} />
-
+        <ClassTextInput
+          label={"First Name: "}
+          placeholder={"Bilbo"}
+          value={firstName}
+          name={"firstName"}
+          handleChange={this.handleChange}
+        />
+        <ErrorMessage
+          message={firstNameError}
+          show={formSubmitted && !validator.firstName}
+        />
+        <ClassTextInput
+          label={"Last Name: "}
+          placeholder={"Baggins"}
+          name={"lastName"}
+          handleChange={this.handleChange}
+          value={lastName}
+        />
+        <ErrorMessage
+          message={lastNameError}
+          show={formSubmitted && !validator.lastName}
+        />
+        <ClassTextInput
+          label={"Email: "}
+          placeholder={"fourthBreakfast7@aol.com"}
+          name={"email"}
+          handleChange={this.handleChange}
+          value={email}
+        />
+        <ErrorMessage
+          message={emailError}
+          show={formSubmitted && !validator.email}
+        />
+        <ClassTextInput
+          label={"City: "}
+          placeholder={"Select a city"}
+          name={"city"}
+          handleChange={this.handleChange}
+          value={city}
+        />
+        <ErrorMessage
+          message={cityError}
+          show={formSubmitted && !validator.city}
+        />
+        <ClassPhoneInput phone={phone} setPhone={this.setPhone} />
+        <ErrorMessage
+          message={phoneError}
+          show={formSubmitted && !validator.phone}
+        />
         <input type="submit" value="Submit" />
       </form>
     );
