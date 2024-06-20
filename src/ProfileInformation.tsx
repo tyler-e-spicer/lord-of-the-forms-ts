@@ -13,13 +13,11 @@ export const InfoRow = ({ label, value }: { label: string; value: string }) => {
 };
 
 interface ProfileInformationProps {
-  userInfo: UserInformation;
+  userInfo: UserInformation | null;
 }
 
 export const ProfileInformation = ({ userInfo }: ProfileInformationProps) => {
-  const { firstName, lastName, email, city, phone, formSubmitted } = userInfo;
-
-  if (!userInfo || !formSubmitted) {
+  if (!userInfo) {
     return (
       <>
         <u>
@@ -31,6 +29,8 @@ export const ProfileInformation = ({ userInfo }: ProfileInformationProps) => {
       </>
     );
   }
+
+  const { firstName, lastName, email, city, phone } = userInfo;
 
   return (
     <>

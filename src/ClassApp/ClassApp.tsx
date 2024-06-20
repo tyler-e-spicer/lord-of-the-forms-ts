@@ -2,18 +2,11 @@ import { Component } from "react";
 import { ClassForm } from "./ClassForm";
 import { ProfileInformation } from "../ProfileInformation";
 import { UserInformation } from "../types";
+type ClassAppState = { userInfo: UserInformation | null };
 
-export class ClassApp extends Component<
-  Record<string, never>,
-  UserInformation
-> {
-  state: UserInformation = {
-    firstName: "",
-    lastName: "",
-    email: "",
-    city: "",
-    phone: ["", "", "", ""],
-    formSubmitted: false
+export class ClassApp extends Component<Record<string, never>, ClassAppState> {
+  state: ClassAppState = {
+    userInfo: null,
   };
 
   appStateHandler = (newState: UserInformation) => {
@@ -27,7 +20,7 @@ export class ClassApp extends Component<
     return (
       <>
         <h2>Class</h2>
-        <ProfileInformation userInfo={this.state} />
+        <ProfileInformation userInfo={this.state.userInfo} />
         <ClassForm appStateHandler={this.appStateHandler} />
       </>
     );

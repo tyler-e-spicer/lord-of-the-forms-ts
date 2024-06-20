@@ -24,8 +24,13 @@ const { firstNameError, lastNameError, emailError, cityError, phoneError } =
   formErrors;
 
 interface FunctionalFormProps {
-  setUserInfo: Dispatch<SetStateAction<UserInformation>>;
+  setUserInfo: Dispatch<SetStateAction<UserInformation | null>>;
 }
+
+const createInputHandler =
+  (setter: Dispatch<SetStateAction<string>>) =>
+  (e: ChangeEvent<HTMLInputElement>) =>
+    setter(e.target.value);
 
 export const FunctionalForm = ({ setUserInfo }: FunctionalFormProps) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -67,18 +72,12 @@ export const FunctionalForm = ({ setUserInfo }: FunctionalFormProps) => {
         email,
         city,
         phone: phone,
-        formSubmitted: true,
       });
       reset();
     } else {
       alert("Bad Inputs");
     }
   };
-
-  const handleInputChange =
-    (setter: Dispatch<SetStateAction<string>>) =>
-    (e: ChangeEvent<HTMLInputElement>) =>
-      setter(e.target.value);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -89,7 +88,7 @@ export const FunctionalForm = ({ setUserInfo }: FunctionalFormProps) => {
         label={"First Name: "}
         placeholder={"Bilbo"}
         value={firstName}
-        handleChange={handleInputChange(setFirstName)}
+        handleChange={createInputHandler(setFirstName)}
       />
       <ErrorMessage
         message={firstNameError}
@@ -98,7 +97,7 @@ export const FunctionalForm = ({ setUserInfo }: FunctionalFormProps) => {
       <FunctionalTextInput
         label={"Last Name: "}
         placeholder={"Baggins"}
-        handleChange={handleInputChange(setLastName)}
+        handleChange={createInputHandler(setLastName)}
         value={lastName}
       />
       <ErrorMessage
@@ -108,7 +107,7 @@ export const FunctionalForm = ({ setUserInfo }: FunctionalFormProps) => {
       <FunctionalTextInput
         label={"Email: "}
         placeholder={"fourthBreakfast7@aol.com"}
-        handleChange={handleInputChange(setEmail)}
+        handleChange={createInputHandler(setEmail)}
         value={email}
       />
       <ErrorMessage
@@ -118,7 +117,7 @@ export const FunctionalForm = ({ setUserInfo }: FunctionalFormProps) => {
       <FunctionalTextInput
         label={"City: "}
         placeholder={"Select a city"}
-        handleChange={handleInputChange(setCity)}
+        handleChange={createInputHandler(setCity)}
         value={city}
       />
       <ErrorMessage

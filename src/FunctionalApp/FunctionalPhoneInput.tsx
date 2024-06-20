@@ -9,7 +9,6 @@ import { PhoneArray } from "../types";
 
 interface FunctionalPhoneInputProps {
   setPhone: Dispatch<SetStateAction<PhoneArray>>;
-  // setPhone: (phone: PhoneArray) => void;
   phone: PhoneArray;
 }
 

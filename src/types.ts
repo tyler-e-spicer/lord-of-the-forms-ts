@@ -4,7 +4,6 @@ export type UserInformation = {
   email: string;
   city: string;
   phone: PhoneArray;
-  formSubmitted: boolean;
 };
 
 export type PhoneArray = [string, string, string, string];

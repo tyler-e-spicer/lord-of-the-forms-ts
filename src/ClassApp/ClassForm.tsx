@@ -82,7 +82,6 @@ export class ClassForm extends Component<ClassFormProps, ClassFormState> {
         email,
         city,
         phone: phone,
-        formSubmitted: true,
       });
       this.reset();
     } else {

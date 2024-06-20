@@ -9,8 +9,10 @@ export function isEmailValid(emailAddress: string) {
 
 export function isCityValid(city: string): boolean {
   if (city.length === 0) return false;
-  const cityToSearch = capitalize(city.trim().toLowerCase());
-  return allCities.includes(cityToSearch);
+  return allCities.some(
+    (allCitiesCity) =>
+      city.toLocaleLowerCase() === allCitiesCity.toLocaleLowerCase()
+  );
 }
 
 export function isNameValid(name: string): boolean {
