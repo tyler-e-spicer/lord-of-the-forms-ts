@@ -1,5 +1,5 @@
 import { allCities } from "./all-cities";
-import { capitalize } from "./transformations";
+// import { capitalize } from "./transformations";
 
 export function isEmailValid(emailAddress: string) {
   // eslint-disable-next-line no-useless-escape
