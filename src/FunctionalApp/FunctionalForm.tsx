@@ -64,8 +64,9 @@ export const FunctionalForm = ({ setUserInfo }: FunctionalFormProps) => {
 
     const validated = Object.values(validator).every((valid) => valid);
 
-    if (validated) {
-      console.log(validated);
+    if (!validated) {
+      alert("Bad Inputs");
+    } else {
       setUserInfo({
         firstName,
         lastName,
@@ -74,8 +75,6 @@ export const FunctionalForm = ({ setUserInfo }: FunctionalFormProps) => {
         phone: phone,
       });
       reset();
-    } else {
-      alert("Bad Inputs");
     }
   };
 

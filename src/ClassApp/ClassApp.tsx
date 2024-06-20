@@ -2,7 +2,7 @@ import { Component } from "react";
 import { ClassForm } from "./ClassForm";
 import { ProfileInformation } from "../ProfileInformation";
 import { UserInformation } from "../types";
-type ClassAppState = { userInfo: UserInformation | null };
+export type ClassAppState = { userInfo: UserInformation | null };
 
 export class ClassApp extends Component<Record<string, never>, ClassAppState> {
   state: ClassAppState = {

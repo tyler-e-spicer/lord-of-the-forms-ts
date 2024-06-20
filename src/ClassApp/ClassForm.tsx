@@ -10,14 +10,15 @@ import {
   isNameValid,
   isPhoneValid,
 } from "../utils/validations";
-import { UserInformation, PhoneArray } from "../types";
+import { PhoneArray } from "../types";
 import { formErrors } from "../utils/error";
+import { ClassAppState } from "./ClassApp";
 
 const { firstNameError, lastNameError, emailError, cityError, phoneError } =
   formErrors;
 
 interface ClassFormProps {
-  appStateHandler: (newState: UserInformation) => void;
+  appStateHandler: (newState: ClassAppState) => void;
 }
 
 interface ClassFormState {
@@ -74,18 +75,13 @@ export class ClassForm extends Component<ClassFormProps, ClassFormState> {
 
     const validated = Object.values(validator).every((valid) => valid);
 
-    if (validated) {
-      console.log(validated);
+    if (!validated) {
+      alert("Bad Inputs");
+    } else {
       this.props.appStateHandler({
-        firstName,
-        lastName,
-        email,
-        city,
-        phone: phone,
+        userInfo: { firstName, lastName, email, city, phone },
       });
       this.reset();
-    } else {
-      alert("Bad Inputs");
     }
   };
 
